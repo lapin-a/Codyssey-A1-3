@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>캐릭터 만들기 | 캐릭토</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.css">
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<header class="site-header">
+  <div class="header-inner">
+    <a href="index.html" class="logo">캐릭토</a>
+    <nav class="main-nav" aria-label="주요 메뉴">
+      <a href="index.html" class="nav-tab">홈</a>
+      <a href="create.html" class="nav-tab is-active">만들기</a>
+      <a href="gallery.html" class="nav-tab">보관함</a>
+      <a href="about.html" class="nav-tab">소개</a>
+    </nav>
+    <button class="nav-toggle" id="navToggle" aria-label="메뉴 열기" aria-expanded="false">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+</header>
+
+<main class="create-main">
+
+  <section class="page-intro">
+    <p class="eyebrow">STEP 1</p>
+    <h1>어떤 캐릭터를 만들까요?</h1>
+    <p class="page-desc">이름은 비워두면 AI가 지어드려요. 키워드는 쉼표로 구분해 2~3개면 충분합니다.</p>
+  </section>
+
+  <section class="create-layout">
+
+    <form class="char-form" id="charForm" novalidate>
+      <div class="field">
+        <label for="charName">이름 <span class="optional">(선택)</span></label>
+        <input type="text" id="charName" name="charName" placeholder="예: 세인, 루나, 비워두면 AI가 지어줘요" maxlength="30">
+      </div>
+
+      <div class="field">
+        <label for="charGenre">분위기 / 장르</label>
+        <select id="charGenre" name="charGenre">
+          <option value="판타지">판타지</option>
+          <option value="현대 학원물">현대 학원물</option>
+          <option value="느와르">느와르</option>
+          <option value="SF">SF</option>
+          <option value="로맨스">로맨스</option>
+          <option value="공포/스릴러">공포/스릴러</option>
+        </select>
+      </div>
+
+      <div class="field">
+        <label for="charKeywords">핵심 키워드 <span class="required">*</span></label>
+        <input type="text" id="charKeywords" name="charKeywords" placeholder="예: 냉정함, 숨겨진 상냥함, 복수심">
+        <p class="field-hint">쉼표(,)로 구분해서 2~3개 입력해주세요.</p>
+      </div>
+
+      <p class="form-error" id="formError" role="alert" hidden></p>
+
+      <button type="submit" class="btn btn-primary btn-generate" id="generateBtn">
+        <span class="btn-label">캐릭터 생성하기</span>
+      </button>
+    </form>
+
+    <div class="result-panel" id="resultPanel">
+
+      <div class="result-empty" id="resultEmpty">
+        <div class="char-card char-card--ghost small">
+          <div class="char-card-tab"></div>
+          <div class="char-card-line"></div>
+          <div class="char-card-line"></div>
+          <div class="char-card-line short"></div>
+        </div>
+        <p>왼쪽에 정보를 입력하고<br>생성하기를 눌러보세요.</p>
+      </div>
+
+      <div class="result-loading" id="resultLoading" hidden>
+        <div class="spinner" aria-hidden="true"></div>
+        <p id="loadingText">AI가 캐릭터를 만들고 있습니다...</p>
+      </div>
+
+      <article class="char-card" id="resultCard" hidden>
+        <div class="char-card-tab"></div>
+        <header class="char-card-head">
+          <h2 id="rcName">이름</h2>
+          <span id="rcGenre" class="char-card-genre">장르</span>
+        </header>
+
+        <dl class="char-card-body">
+          <div class="char-card-row">
+            <dt>성격</dt>
+            <dd id="rcPersonality"></dd>
+          </div>
+          <div class="char-card-row">
+            <dt>말투 예시</dt>
+            <dd id="rcSpeech"></dd>
+          </div>
+          <div class="char-card-row">
+            <dt>배경 이야기</dt>
+            <dd id="rcBackstory"></dd>
+          </div>
+          <div class="char-card-row char-card-row--split">
+            <div>
+              <dt>강점</dt>
+              <dd id="rcStrengths"></dd>
+            </div>
+            <div>
+              <dt>약점</dt>
+              <dd id="rcWeaknesses"></dd>
+            </div>
+          </div>
+          <div class="char-card-row char-card-row--split">
+            <div>
+              <dt>좋아하는 것</dt>
+              <dd id="rcLikes"></dd>
+            </div>
+            <div>
+              <dt>싫어하는 것</dt>
+              <dd id="rcDislikes"></dd>
+            </div>
+          </div>
+        </dl>
+
+        <div class="char-card-actions">
+          <button type="button" class="btn btn-ghost" id="regenerateBtn">다시 만들기</button>
+          <button type="button" class="btn btn-primary" id="saveBtn">보관함에 저장</button>
+        </div>
+        <p class="save-status" id="saveStatus" role="status" hidden></p>
+      </article>
+
+    </div>
+  </section>
+
+</main>
+
+<footer class="site-footer">
+  <p>캐릭토 · 이야기의 첫 문장을 위한 캐릭터 생성기</p>
+</footer>
+
+<script src="js/main.js"></script>
+<script src="js/create.js"></script>
+</body>
+</html>

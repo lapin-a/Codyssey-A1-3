@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>내 캐릭터 보관함 | 캐릭토</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.css">
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<header class="site-header">
+  <div class="header-inner">
+    <a href="index.html" class="logo">캐릭토</a>
+    <nav class="main-nav" aria-label="주요 메뉴">
+      <a href="index.html" class="nav-tab">홈</a>
+      <a href="create.html" class="nav-tab">만들기</a>
+      <a href="gallery.html" class="nav-tab is-active">보관함</a>
+      <a href="about.html" class="nav-tab">소개</a>
+    </nav>
+    <button class="nav-toggle" id="navToggle" aria-label="메뉴 열기" aria-expanded="false">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+</header>
+
+<main class="gallery-main">
+
+  <section class="page-intro">
+    <p class="eyebrow">보관함</p>
+    <h1>내 캐릭터들</h1>
+    <p class="page-desc">지금까지 저장한 캐릭터 카드들을 모아뒀어요.</p>
+  </section>
+
+  <section class="gallery-status">
+    <div class="gallery-loading" id="galleryLoading">
+      <div class="spinner" aria-hidden="true"></div>
+      <p>캐릭터를 불러오는 중입니다...</p>
+    </div>
+
+    <div class="gallery-empty" id="galleryEmpty" hidden>
+      <div class="char-card char-card--ghost small">
+        <div class="char-card-tab"></div>
+        <div class="char-card-line"></div>
+        <div class="char-card-line short"></div>
+      </div>
+      <p>아직 저장된 캐릭터가 없어요.</p>
+      <a href="create.html" class="btn btn-primary">첫 캐릭터 만들러 가기</a>
+    </div>
+
+    <p class="gallery-error" id="galleryError" role="alert" hidden>
+      캐릭터를 불러오는 중 오류가 발생했습니다. 잠시 후 다시 시도해주세요.
+    </p>
+  </section>
+
+  <section class="gallery-grid" id="galleryGrid" hidden></section>
+
+</main>
+
+<footer class="site-footer">
+  <p>캐릭토 · 이야기의 첫 문장을 위한 캐릭터 생성기</p>
+</footer>
+
+<script src="js/main.js"></script>
+<script src="js/gallery.js"></script>
+</body>
+</html>
