@@ -21,12 +21,17 @@ document.addEventListener('DOMContentLoaded', () => {
     const card = document.createElement('article');
     card.className = 'char-card';
 
+    const metaParts = [character.gender, character.age, character.species, character.religion].filter(
+      (v) => v && String(v).trim().length > 0
+    );
+
     card.innerHTML = `
       <div class="char-card-tab"></div>
       <header class="char-card-head">
         <h2>${escapeHtml(character.name || '이름 없음')}</h2>
         <span class="char-card-genre">${escapeHtml(character.genre || '')}</span>
       </header>
+      <p class="char-card-meta">${escapeHtml(metaParts.join(' · '))}</p>
       <dl class="char-card-body">
         <div class="char-card-row">
           <dt>성격</dt>

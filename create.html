@@ -32,20 +32,53 @@
   <section class="page-intro">
     <p class="eyebrow">STEP 1</p>
     <h1>어떤 캐릭터를 만들까요?</h1>
-    <p class="page-desc">이름은 비워두면 AI가 지어드려요. 키워드는 쉼표로 구분해 2~3개면 충분합니다.</p>
+    <p class="page-desc">이름ㆍ성별ㆍ나이ㆍ종족ㆍ종교ㆍ분위기ㆍ키워드 중 원하는 것만 채워주세요. 비워둔 항목은 AI가 알아서 채워드려요.</p>
   </section>
 
   <section class="create-layout">
 
     <form class="char-form" id="charForm" novalidate>
+      <p class="form-note">모든 항목은 선택이에요. 원하는 것만 채워주시면 나머지는 AI가 알아서 채워드려요.</p>
+
       <div class="field">
         <label for="charName">이름 <span class="optional">(선택)</span></label>
-        <input type="text" id="charName" name="charName" placeholder="예: 세인, 루나, 비워두면 AI가 지어줘요" maxlength="30">
+        <input type="text" id="charName" name="charName" placeholder="예: 세인, 루나" maxlength="30">
+      </div>
+
+      <div class="field-row">
+        <div class="field">
+          <label for="charGender">성별 <span class="optional">(선택)</span></label>
+          <select id="charGender" name="charGender">
+            <option value="">AI에게 맡기기</option>
+            <option value="여성">여성</option>
+            <option value="남성">남성</option>
+            <option value="논바이너리">논바이너리</option>
+            <option value="기타/직접 설명">기타</option>
+          </select>
+        </div>
+
+        <div class="field">
+          <label for="charAge">나이 <span class="optional">(선택)</span></label>
+          <input type="text" id="charAge" name="charAge" placeholder="예: 27, 20대 후반, 10대 중반" maxlength="20">
+        </div>
+      </div>
+
+      <div class="field-row">
+        <div class="field">
+          <label for="charSpecies">종족 <span class="optional">(선택)</span></label>
+          <input type="text" id="charSpecies" name="charSpecies" placeholder="예: 인간, 엘프, 수인" maxlength="20">
+        </div>
+
+        <div class="field">
+          <label for="charReligion">종교 <span class="optional">(선택)</span></label>
+          <input type="text" id="charReligion" name="charReligion" placeholder="예: 무교, 태양신 신앙" maxlength="20">
+        </div>
       </div>
 
       <div class="field">
-        <label for="charGenre">분위기 / 장르</label>
+        <label for="charGenre">분위기 / 장르 <span class="optional">(선택)</span></label>
         <select id="charGenre" name="charGenre">
+          <option value="">AI에게 맡기기</option>
           <option value="판타지">판타지</option>
           <option value="현대 학원물">현대 학원물</option>
           <option value="느와르">느와르</option>
@@ -56,9 +89,9 @@
       </div>
 
       <div class="field">
-        <label for="charKeywords">핵심 키워드 <span class="required">*</span></label>
+        <label for="charKeywords">핵심 키워드 <span class="optional">(선택)</span></label>
         <input type="text" id="charKeywords" name="charKeywords" placeholder="예: 냉정함, 숨겨진 상냥함, 복수심">
-        <p class="field-hint">쉼표(,)로 구분해서 2~3개 입력해주세요.</p>
+        <p class="field-hint">쉼표(,)로 구분해서 적어주세요.</p>
       </div>
 
       <p class="form-error" id="formError" role="alert" hidden></p>
@@ -91,6 +124,7 @@
           <h2 id="rcName">이름</h2>
           <span id="rcGenre" class="char-card-genre">장르</span>
         </header>
+        <p class="char-card-meta" id="rcMeta"></p>
 
         <dl class="char-card-body">
           <div class="char-card-row">

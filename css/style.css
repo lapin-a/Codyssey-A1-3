@@ -263,6 +263,12 @@ img{ max-width: 100%; display: block; }
   white-space: nowrap;
 }
 
+.char-card-meta{
+  font-size: 0.82rem;
+  color: var(--color-secondary);
+  margin: -0.5rem 0 1rem;
+}
+
 .char-card-body{ margin: 0; }
 .char-card-row{ margin-bottom: 0.9rem; }
 .char-card-row dt{
@@ -433,7 +439,23 @@ img{ max-width: 100%; display: block; }
   height: fit-content;
 }
 
-.field{ display: flex; flex-direction: column; gap: 0.4rem; }
+.form-note{
+  margin: 0 0 0.25rem;
+  font-size: 0.82rem;
+  color: var(--color-muted);
+  padding: 0.6em 0.8em;
+  background: var(--color-bg-soft);
+  border-radius: var(--radius-sm);
+  border: 1px dashed var(--color-border);
+}
+
+.field-row{
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+}
+
+.field{ display: flex; flex-direction: column; gap: 0.4rem; min-width: 0; }
 .field label{ font-size: 0.88rem; font-weight: 600; }
 .optional{ color: var(--color-muted); font-weight: 400; }
 .required{ color: var(--color-secondary); }

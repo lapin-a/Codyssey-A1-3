@@ -22,8 +22,9 @@ def fetch_characters():
         with conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor) as cur:
             cur.execute(
                 """
-                SELECT id, name, genre, personality, speech_style,
-                       backstory, strengths, weaknesses, likes, dislikes, created_at
+                SELECT id, name, gender, age, species, religion, genre,
+                       personality, speech_style, backstory, strengths,
+                       weaknesses, likes, dislikes, created_at
                 FROM characters
                 ORDER BY created_at DESC;
                 """

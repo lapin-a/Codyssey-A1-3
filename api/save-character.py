@@ -6,6 +6,10 @@
 # CREATE TABLE characters (
 #     id SERIAL PRIMARY KEY,
 #     name TEXT NOT NULL,
+#     gender TEXT,
+#     age TEXT,
+#     species TEXT,
+#     religion TEXT,
 #     genre TEXT,
 #     keywords TEXT,
 #     personality TEXT,
@@ -39,13 +43,18 @@ def insert_character(data):
             cur.execute(
                 """
                 INSERT INTO characters
-                    (name, genre, keywords, personality, speech_style,
-                     backstory, strengths, weaknesses, likes, dislikes)
-                VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
+                    (name, gender, age, species, religion, genre, keywords,
+                     personality, speech_style, backstory, strengths,
+                     weaknesses, likes, dislikes)
+                VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
                 RETURNING id;
                 """,
                 (
                     data.get("name"),
+                    data.get("gender"),
+                    data.get("age"),
+                    data.get("species"),
+                    data.get("religion"),
                     data.get("genre"),
                     data.get("keywords"),
                     data.get("personality"),

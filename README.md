@@ -78,6 +78,10 @@ Vercel Postgres 콘솔의 Query 탭에서 아래 SQL을 한 번 실행해야 합
 CREATE TABLE characters (
     id SERIAL PRIMARY KEY,
     name TEXT NOT NULL,
+    gender TEXT,
+    age TEXT,
+    species TEXT,
+    religion TEXT,
     genre TEXT,
     keywords TEXT,
     personality TEXT,

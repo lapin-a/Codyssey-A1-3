@@ -5,6 +5,10 @@
 document.addEventListener('DOMContentLoaded', () => {
   const form = document.getElementById('charForm');
   const nameInput = document.getElementById('charName');
+  const genderSelect = document.getElementById('charGender');
+  const ageInput = document.getElementById('charAge');
+  const speciesInput = document.getElementById('charSpecies');
+  const religionInput = document.getElementById('charReligion');
   const genreSelect = document.getElementById('charGenre');
   const keywordsInput = document.getElementById('charKeywords');
   const formError = document.getElementById('formError');
@@ -42,9 +46,19 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   function validateInput() {
-    const keywords = keywordsInput.value.trim();
-    if (!keywords) {
-      return '입력 내용을 확인해주세요. 핵심 키워드를 1개 이상 입력해주세요.';
+    const values = [
+      nameInput.value,
+      genderSelect.value,
+      ageInput.value,
+      speciesInput.value,
+      religionInput.value,
+      genreSelect.value,
+      keywordsInput.value,
+    ];
+    const hasAnyInput = values.some((v) => v.trim().length > 0);
+
+    if (!hasAnyInput) {
+      return '입력 내용을 확인해주세요. 최소 1개 이상의 항목을 입력해주세요.';
     }
     return null;
   }
@@ -52,6 +66,12 @@ document.addEventListener('DOMContentLoaded', () => {
   function fillResultCard(data) {
     document.getElementById('rcName').textContent = data.name || '이름 없음';
     document.getElementById('rcGenre').textContent = data.genre || '';
+
+    const metaParts = [data.gender, data.age, data.species, data.religion].filter(
+      (v) => v && String(v).trim().length > 0
+    );
+    document.getElementById('rcMeta').textContent = metaParts.join(' · ');
+
     document.getElementById('rcPersonality').textContent = data.personality || '-';
     document.getElementById('rcSpeech').textContent = data.speech_style || '-';
     document.getElementById('rcBackstory').textContent = data.backstory || '-';
@@ -71,6 +91,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const payload = {
       name: nameInput.value.trim(),
+      gender: genderSelect.value,
+      age: ageInput.value.trim(),
+      species: speciesInput.value.trim(),
+      religion: religionInput.value.trim(),
       genre: genreSelect.value,
       keywords: keywordsInput.value.trim(),
     };
@@ -99,7 +123,7 @@ document.addEventListener('DOMContentLoaded', () => {
         throw new Error(data.error || 'AI 요청 중 오류가 발생했습니다. 잠시 후 다시 시도해주세요.');
       }
 
-      currentCharacter = { ...data.result, genre: payload.genre };
+      currentCharacter = data.result;
       fillResultCard(currentCharacter);
       saveStatus.hidden = true;
       showState('result');
