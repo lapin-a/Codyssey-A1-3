@@ -5,6 +5,7 @@
 #
 # CREATE TABLE characters (
 #     id SERIAL PRIMARY KEY,
+#     client_id TEXT,
 #     name TEXT NOT NULL,
 #     gender TEXT,
 #     age TEXT,
@@ -25,13 +26,14 @@
 
 import os
 import json
+import traceback
 from http.server import BaseHTTPRequestHandler
 
 import psycopg2
 
 
 def get_connection():
-    conn_string = os.environ.get("STORAGE_URL")
+    conn_string = os.environ.get("Database_DATABASE_URL")
     if not conn_string:
         raise RuntimeError("서버에 데이터베이스 연결 정보가 설정되어 있지 않습니다.")
     return psycopg2.connect(conn_string)
@@ -44,13 +46,14 @@ def insert_character(data):
             cur.execute(
                 """
                 INSERT INTO characters
-                    (name, gender, age, species, religion, genre, keywords,
+                    (client_id, name, gender, age, species, religion, genre, keywords,
                      extra_info, personality, speech_style, backstory,
                      strengths, weaknesses, likes, dislikes)
-                VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
+                VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
                 RETURNING id;
                 """,
                 (
+                    data.get("client_id"),
                     data.get("name"),
                     data.get("gender"),
                     data.get("age"),
@@ -99,8 +102,7 @@ class handler(BaseHTTPRequestHandler):
                 "error": "요청 형식이 올바르지 않습니다.",
             })
         except Exception:
-            import traceback
-            traceback.print_exc()  # Vercel Logs에 실제 트레이스백을 남김
+            traceback.print_exc()
             self._send_json(500, {
                 "success": False,
                 "error": "저장 중 오류가 발생했습니다. 잠시 후 다시 시도해주세요.",

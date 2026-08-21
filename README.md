@@ -2,14 +2,16 @@
 
 키워드 몇 개만 입력하면 AI가 이름ㆍ성격ㆍ말투ㆍ배경 스토리까지 갖춘 캐릭터 설정을 만들어주는 캐릭터 생성 서비스입니다.
 
+**배포 URL**: https://codyssey-a1-3-six.vercel.app
+
 ## 서비스 소개
 
 - **서비스 이름**: 캐릭토
 - **서비스 목적**: 웹소설/웹툰/TRPG/게임 기획을 위한 캐릭터를 만들 때 가장 막막한 "내면 설정"(성격, 말투, 배경 이야기)을 AI가 초안으로 채워주어 창작의 첫 문턱을 낮춥니다.
 - **주요 기능**
-  - 이름(선택)ㆍ장르ㆍ키워드를 입력하면 AI가 캐릭터 설정을 생성
+  - 이름(선택)ㆍ장르ㆍ키워드ㆍ추가 정보(세계관/특징)를 입력하면 AI가 캐릭터 설정을 생성
   - 마음에 들지 않으면 재생성
-  - 완성된 캐릭터를 보관함에 저장하고 목록으로 다시 확인
+  - 완성된 캐릭터를 저장하고, **같은 브라우저에서 저장한 캐릭터만** 내 보관함에서 다시 확인 (회원가입 없이 브라우저별로 발급되는 고유 ID로 구분)
 
 ## 기술 스택
 
@@ -64,11 +66,11 @@ vercel dev
 
 ```text
 GEMINI_API_KEY=your_api_key_here
-STORAGE_URL=your_vercel_postgres_connection_string_here
+Database_DATABASE_URL=your_vercel_postgres_connection_string_here
 ```
 
 - `GEMINI_API_KEY`: Google AI Studio에서 발급받은 Gemini API 키
-- `STORAGE_URL`: Vercel Postgres(Neon 기반) 생성 후 프로젝트에 연결하면 `.env.local` 탭에서 자동으로 제공되는 연결 문자열
+- `Database_DATABASE_URL`: Vercel Postgres(Neon 기반) 생성 후 프로젝트에 연결하면 자동으로 제공되는 연결 문자열. `Database_` 접두사는 연동 시 설정한 Custom Environment Variable Prefix에서 비롯된 것으로, 실제 Vercel 프로젝트의 Environment Variables 목록에서 정확한 이름을 확인해야 합니다.
 
 ### 데이터베이스 테이블 생성
 
@@ -77,6 +79,7 @@ Vercel Postgres 콘솔의 Query 탭에서 아래 SQL을 한 번 실행해야 합
 ```sql
 CREATE TABLE characters (
     id SERIAL PRIMARY KEY,
+    client_id TEXT,
     name TEXT NOT NULL,
     gender TEXT,
     age TEXT,
@@ -103,9 +106,3 @@ CREATE TABLE characters (
 3. 프로젝트 설정의 Environment Variables에 `GEMINI_API_KEY`, `POSTGRES_URL`을 등록합니다. (Postgres는 Vercel Storage 탭에서 먼저 생성 후 프로젝트에 연결하면 `POSTGRES_URL`이 자동 등록됩니다.)
 4. Deploy를 실행합니다.
 5. 배포가 완료되면 발급된 URL로 접속해 캐릭터 생성 → 저장 → 보관함 조회까지 정상 동작하는지 테스트합니다.
-
-## 배포 URL
-
-```text
-배포 URL: (배포 완료 후 여기에 입력)
-```

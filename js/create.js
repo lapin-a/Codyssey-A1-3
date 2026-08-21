@@ -1,4 +1,4 @@
-// js/create.js 
+// js/create.js
 // 캐릭터 만들기 페이지: 입력 검증 -> /api/generate-character 호출
 // -> 결과 표시 -> /api/save-character 로 저장
 
@@ -168,7 +168,7 @@ document.addEventListener('DOMContentLoaded', () => {
       const response = await fetch('/api/save-character', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(currentCharacter),
+        body: JSON.stringify({ ...currentCharacter, client_id: window.getClientId() }),
       });
 
       const data = await response.json();

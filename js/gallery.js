@@ -81,7 +81,9 @@ document.addEventListener('DOMContentLoaded', () => {
     const timeoutId = setTimeout(() => controller.abort(), REQUEST_TIMEOUT_MS);
 
     try {
-      const response = await fetch('/api/get-characters', { signal: controller.signal });
+      const response = await fetch(`/api/get-characters?client_id=${encodeURIComponent(window.getClientId())}`, {
+        signal: controller.signal,
+      });
       const data = await response.json();
 
       if (!response.ok || !data.success) {
