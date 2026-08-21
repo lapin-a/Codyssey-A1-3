@@ -99,6 +99,8 @@ class handler(BaseHTTPRequestHandler):
                 "error": "요청 형식이 올바르지 않습니다.",
             })
         except Exception:
+            import traceback
+            traceback.print_exc()  # Vercel Logs에 실제 트레이스백을 남김
             self._send_json(500, {
                 "success": False,
                 "error": "저장 중 오류가 발생했습니다. 잠시 후 다시 시도해주세요.",
