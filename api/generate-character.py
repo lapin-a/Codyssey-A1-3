@@ -1,13 +1,30 @@
 # api/generate-character.py
-# 사용자 입력(이름/장르/키워드)을 받아 Gemini API를 호출하고
+# 사용자 입력(이름/장르/키워드 등)을 받아 Gemini API를 호출하고
 # 구조화된 캐릭터 설정(JSON)을 반환합니다.
+#
+# AI 호출 남용을 막기 위해, 같은 client_id로 최근 RATE_LIMIT_WINDOW_SECONDS 안에
+# RATE_LIMIT_MAX_REQUESTS회를 초과해 요청하면 429로 차단합니다.
+# 사전 준비: Vercel Postgres(Neon) 콘솔에서 아래 SQL을 한 번 실행해야 합니다.
+#
+# CREATE TABLE IF NOT EXISTS generation_requests (
+#     id SERIAL PRIMARY KEY,
+#     client_id TEXT,
+#     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+# );
 
 import os
 import json
+import traceback
 from http.server import BaseHTTPRequestHandler
+from urllib.parse import urlparse, parse_qs
 
+import psycopg2
 from google import genai
 from google.genai import types
+
+
+RATE_LIMIT_MAX_REQUESTS = 5
+RATE_LIMIT_WINDOW_SECONDS = 60
 
 
 SYSTEM_INSTRUCTION = """당신은 창작자를 돕는 캐릭터 설정 작가입니다.
@@ -36,6 +53,45 @@ SYSTEM_INSTRUCTION = """당신은 창작자를 돕는 캐릭터 설정 작가입
   "dislikes": "싫어하는 것 (짧게)"
 }
 """
+
+
+def get_connection():
+    conn_string = os.environ.get("Database_DATABASE_URL")
+    if not conn_string:
+        raise RuntimeError("서버에 데이터베이스 연결 정보가 설정되어 있지 않습니다.")
+    return psycopg2.connect(conn_string)
+
+
+def is_rate_limited(client_id):
+    """최근 RATE_LIMIT_WINDOW_SECONDS 안에 RATE_LIMIT_MAX_REQUESTS회를 넘겼는지 확인합니다."""
+    conn = get_connection()
+    try:
+        with conn.cursor() as cur:
+            cur.execute(
+                """
+                SELECT COUNT(*) FROM generation_requests
+                WHERE client_id = %s
+                  AND created_at > NOW() - INTERVAL '%s seconds';
+                """,
+                (client_id, RATE_LIMIT_WINDOW_SECONDS),
+            )
+            count = cur.fetchone()[0]
+        return count >= RATE_LIMIT_MAX_REQUESTS
+    finally:
+        conn.close()
+
+
+def log_request(client_id):
+    conn = get_connection()
+    try:
+        with conn.cursor() as cur:
+            cur.execute(
+                "INSERT INTO generation_requests (client_id) VALUES (%s);",
+                (client_id,),
+            )
+        conn.commit()
+    finally:
+        conn.close()
 
 
 def build_user_prompt(fields):
@@ -71,7 +127,7 @@ def call_gemini(fields):
     client = genai.Client(api_key=api_key)
 
     response = client.models.generate_content(
-        model="gemini-3.5-flash-lite",
+        model="gemini-2.5-flash",
         contents=build_user_prompt(fields),
         config=types.GenerateContentConfig(
             system_instruction=SYSTEM_INSTRUCTION,
@@ -109,6 +165,22 @@ class handler(BaseHTTPRequestHandler):
                 })
                 return
 
+            # client_id가 없는 요청(브라우저 JS를 거치지 않은 직접 호출 등)은
+            # 요청 헤더의 접속 IP를 대신 식별자로 사용합니다.
+            client_id = (payload.get("client_id") or "").strip()
+            if not client_id:
+                forwarded_for = self.headers.get("x-forwarded-for", "")
+                client_id = f"ip:{forwarded_for.split(',')[0].strip() or self.client_address[0]}"
+
+            if is_rate_limited(client_id):
+                self._send_json(429, {
+                    "success": False,
+                    "error": f"요청이 너무 많습니다. {RATE_LIMIT_WINDOW_SECONDS}초 후 다시 시도해주세요.",
+                })
+                return
+
+            log_request(client_id)
+
             result = call_gemini(fields)
             self._send_json(200, {"success": True, "result": result})
 
@@ -119,6 +191,7 @@ class handler(BaseHTTPRequestHandler):
             })
         except Exception:
             # 상세 원인은 서버 로그로만 남기고, 사용자에게는 일반 메시지만 노출합니다.
+            traceback.print_exc()
             self._send_json(500, {
                 "success": False,
                 "error": "AI 요청 중 오류가 발생했습니다. 잠시 후 다시 시도해주세요.",

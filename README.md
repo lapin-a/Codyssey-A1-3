@@ -97,7 +97,15 @@ CREATE TABLE characters (
     dislikes TEXT,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
+
+CREATE TABLE IF NOT EXISTS generation_requests (
+    id SERIAL PRIMARY KEY,
+    client_id TEXT,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
 ```
+
+`generation_requests`는 AI 호출 남용을 막기 위한 요청 빈도 제어(rate limiting)에 쓰입니다. 같은 `client_id`(브라우저별 고유 ID)로 60초 안에 5회를 초과해 캐릭터 생성을 요청하면 429 오류로 차단됩니다.
 
 ## Vercel 배포 방법
 
@@ -106,3 +114,9 @@ CREATE TABLE characters (
 3. 프로젝트 설정의 Environment Variables에 `GEMINI_API_KEY`, `POSTGRES_URL`을 등록합니다. (Postgres는 Vercel Storage 탭에서 먼저 생성 후 프로젝트에 연결하면 `POSTGRES_URL`이 자동 등록됩니다.)
 4. Deploy를 실행합니다.
 5. 배포가 완료되면 발급된 URL로 접속해 캐릭터 생성 → 저장 → 보관함 조회까지 정상 동작하는지 테스트합니다.
+
+## 배포 URL
+
+```text
+배포 URL: https://codyssey-a1-3-six.vercel.app
+```

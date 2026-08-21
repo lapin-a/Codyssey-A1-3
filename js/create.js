@@ -109,6 +109,7 @@ document.addEventListener('DOMContentLoaded', () => {
       genre: genreSelect.value,
       keywords: keywordsInput.value.trim(),
       extra_info: extraInput.value.trim(),
+      client_id: window.getClientId(),
     };
     lastPayload = payload;
 
