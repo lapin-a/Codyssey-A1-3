@@ -1,4 +1,4 @@
-// js/create.js
+// js/create.js 
 // 캐릭터 만들기 페이지: 입력 검증 -> /api/generate-character 호출
 // -> 결과 표시 -> /api/save-character 로 저장
 
