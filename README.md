@@ -64,11 +64,11 @@ vercel dev
 
 ```text
 GEMINI_API_KEY=your_api_key_here
-POSTGRES_URL=your_vercel_postgres_connection_string_here
+STORAGE_URL=your_vercel_postgres_connection_string_here
 ```
 
 - `GEMINI_API_KEY`: Google AI Studio에서 발급받은 Gemini API 키
-- `POSTGRES_URL`: Vercel Postgres 생성 후 프로젝트에 연결하면 자동으로 제공되는 연결 문자열 (정확한 변수명은 Vercel 콘솔에서 확인 필요)
+- `STORAGE_URL`: Vercel Postgres(Neon 기반) 생성 후 프로젝트에 연결하면 `.env.local` 탭에서 자동으로 제공되는 연결 문자열
 
 ### 데이터베이스 테이블 생성
 

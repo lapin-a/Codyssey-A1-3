@@ -31,7 +31,7 @@ import psycopg2
 
 
 def get_connection():
-    conn_string = os.environ.get("POSTGRES_URL")
+    conn_string = os.environ.get("STORAGE_URL")
     if not conn_string:
         raise RuntimeError("서버에 데이터베이스 연결 정보가 설정되어 있지 않습니다.")
     return psycopg2.connect(conn_string)

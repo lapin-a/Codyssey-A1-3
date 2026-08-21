@@ -31,6 +31,9 @@
    ========================================================= */
 *, *::before, *::after{ box-sizing: border-box; }
 
+/* hidden 속성은 다른 display 규칙보다 항상 우선합니다. */
+[hidden]{ display: none !important; }
+
 html{ scroll-behavior: smooth; }
 
 body{
