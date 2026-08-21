@@ -33,6 +33,14 @@ document.addEventListener('DOMContentLoaded', () => {
       </header>
       <p class="char-card-meta">${escapeHtml(metaParts.join(' · '))}</p>
       <dl class="char-card-body">
+        ${
+          character.extra_info
+            ? `<div class="char-card-row">
+                 <dt>추가 설정</dt>
+                 <dd>${escapeHtml(character.extra_info)}</dd>
+               </div>`
+            : ''
+        }
         <div class="char-card-row">
           <dt>성격</dt>
           <dd>${escapeHtml(character.personality || '-')}</dd>

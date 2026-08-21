@@ -23,8 +23,8 @@ def fetch_characters():
             cur.execute(
                 """
                 SELECT id, name, gender, age, species, religion, genre,
-                       personality, speech_style, backstory, strengths,
-                       weaknesses, likes, dislikes, created_at
+                       extra_info, personality, speech_style, backstory,
+                       strengths, weaknesses, likes, dislikes, created_at
                 FROM characters
                 ORDER BY created_at DESC;
                 """

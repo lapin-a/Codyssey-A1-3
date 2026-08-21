@@ -11,8 +11,10 @@ from google.genai import types
 
 
 SYSTEM_INSTRUCTION = """당신은 창작자를 돕는 캐릭터 설정 작가입니다.
-사용자는 이름/성별/나이/종족/종교/장르/키워드 중 원하는 항목만 채워서 보냅니다.
+사용자는 이름/성별/나이/종족/종교/장르/키워드/추가 정보 중 원하는 항목만 채워서 보냅니다.
 비어 있는 항목은 이미 채워진 다른 항목들과 어울리도록 당신이 자유롭게 창작해서 채우세요.
+"추가 정보"에는 세계관 설정이나 캐릭터의 특징, 사연이 자유 서술 형태로 들어올 수 있습니다.
+이 내용이 있다면 반드시 배경 이야기(backstory)와 성격(personality)에 자연스럽게 녹여내세요.
 나이는 사용자가 숫자(예: 27)로 줬으면 숫자를 그대로 쓰고, "20대 후반"처럼 애매하게 줬으면 그 표현을 그대로 유지하세요.
 사용자가 나이를 비워뒀다면 다른 설정과 어울리는 나이를 숫자 또는 "OO대 초반/중반/후반" 형태로 자유롭게 정하세요.
 
@@ -46,6 +48,7 @@ def build_user_prompt(fields):
         "religion": "종교",
         "genre": "장르/분위기",
         "keywords": "핵심 키워드",
+        "extra_info": "추가 정보 (세계관/특징/사연)",
     }
     for key, label in labels.items():
         value = fields.get(key)
@@ -96,6 +99,7 @@ class handler(BaseHTTPRequestHandler):
                 "religion": (payload.get("religion") or "").strip(),
                 "genre": (payload.get("genre") or "").strip(),
                 "keywords": (payload.get("keywords") or "").strip(),
+                "extra_info": (payload.get("extra_info") or "").strip(),
             }
 
             if not any(fields.values()):

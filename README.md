@@ -84,6 +84,7 @@ CREATE TABLE characters (
     religion TEXT,
     genre TEXT,
     keywords TEXT,
+    extra_info TEXT,
     personality TEXT,
     speech_style TEXT,
     backstory TEXT,

@@ -12,6 +12,7 @@
 #     religion TEXT,
 #     genre TEXT,
 #     keywords TEXT,
+#     extra_info TEXT,
 #     personality TEXT,
 #     speech_style TEXT,
 #     backstory TEXT,
@@ -44,9 +45,9 @@ def insert_character(data):
                 """
                 INSERT INTO characters
                     (name, gender, age, species, religion, genre, keywords,
-                     personality, speech_style, backstory, strengths,
-                     weaknesses, likes, dislikes)
-                VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
+                     extra_info, personality, speech_style, backstory,
+                     strengths, weaknesses, likes, dislikes)
+                VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
                 RETURNING id;
                 """,
                 (
@@ -57,6 +58,7 @@ def insert_character(data):
                     data.get("religion"),
                     data.get("genre"),
                     data.get("keywords"),
+                    data.get("extra_info"),
                     data.get("personality"),
                     data.get("speech_style"),
                     data.get("backstory"),

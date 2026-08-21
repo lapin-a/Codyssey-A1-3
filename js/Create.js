@@ -11,6 +11,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const religionInput = document.getElementById('charReligion');
   const genreSelect = document.getElementById('charGenre');
   const keywordsInput = document.getElementById('charKeywords');
+  const extraInput = document.getElementById('charExtra');
   const formError = document.getElementById('formError');
 
   const generateBtn = document.getElementById('generateBtn');
@@ -27,6 +28,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const SLOW_RESPONSE_NOTICE_MS = 6000; // 6초 넘게 걸리면 안내 문구 교체
 
   let currentCharacter = null; // 최근 생성 결과 (저장/재생성용)
+  let lastPayload = null; // 마지막으로 제출한 입력값 (사용자가 적은 추가 정보 보존용)
 
   function showState(state) {
     // state: 'empty' | 'loading' | 'result'
@@ -54,6 +56,7 @@ document.addEventListener('DOMContentLoaded', () => {
       religionInput.value,
       genreSelect.value,
       keywordsInput.value,
+      extraInput.value,
     ];
     const hasAnyInput = values.some((v) => v.trim().length > 0);
 
@@ -71,6 +74,14 @@ document.addEventListener('DOMContentLoaded', () => {
       (v) => v && String(v).trim().length > 0
     );
     document.getElementById('rcMeta').textContent = metaParts.join(' · ');
+
+    const extraRow = document.getElementById('rcExtraRow');
+    if (data.extra_info) {
+      extraRow.hidden = false;
+      document.getElementById('rcExtra').textContent = data.extra_info;
+    } else {
+      extraRow.hidden = true;
+    }
 
     document.getElementById('rcPersonality').textContent = data.personality || '-';
     document.getElementById('rcSpeech').textContent = data.speech_style || '-';
@@ -97,7 +108,9 @@ document.addEventListener('DOMContentLoaded', () => {
       religion: religionInput.value.trim(),
       genre: genreSelect.value,
       keywords: keywordsInput.value.trim(),
+      extra_info: extraInput.value.trim(),
     };
+    lastPayload = payload;
 
     showState('loading');
     loadingText.textContent = 'AI가 캐릭터를 만들고 있습니다...';
@@ -123,7 +136,7 @@ document.addEventListener('DOMContentLoaded', () => {
         throw new Error(data.error || 'AI 요청 중 오류가 발생했습니다. 잠시 후 다시 시도해주세요.');
       }
 
-      currentCharacter = data.result;
+      currentCharacter = { ...data.result, extra_info: payload.extra_info };
       fillResultCard(currentCharacter);
       saveStatus.hidden = true;
       showState('result');

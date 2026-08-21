@@ -94,6 +94,12 @@
         <p class="field-hint">쉼표(,)로 구분해서 적어주세요.</p>
       </div>
 
+      <div class="field">
+        <label for="charExtra">추가 정보 <span class="optional">(선택)</span></label>
+        <textarea id="charExtra" name="charExtra" rows="4" maxlength="500" placeholder="예: 마법이 금지된 왕국 출신, 왼쪽 눈에 화상 흉터가 있음, 죽은 스승의 검을 물려받음"></textarea>
+        <p class="field-hint">세계관, 외형적 특징, 특별한 사연 등 자유롭게 적어주세요.</p>
+      </div>
+
       <p class="form-error" id="formError" role="alert" hidden></p>
 
       <button type="submit" class="btn btn-primary btn-generate" id="generateBtn">
@@ -127,6 +133,10 @@
         <p class="char-card-meta" id="rcMeta"></p>
 
         <dl class="char-card-body">
+          <div class="char-card-row" id="rcExtraRow" hidden>
+            <dt>추가 설정</dt>
+            <dd id="rcExtra"></dd>
+          </div>
           <div class="char-card-row">
             <dt>성격</dt>
             <dd id="rcPersonality"></dd>
